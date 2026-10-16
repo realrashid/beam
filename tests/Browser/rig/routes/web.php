@@ -32,9 +32,13 @@ Route::get('/', fn () => 'beam rig');
 Route::get('/login-as/{id}', function (int $id) {
     abort_unless(app()->environment('local', 'testing'), 404);
 
+    // Keyed by id, not found-or-created by email: specs hardcode "/call/2" to
+    // mean "User 2", which is only true if its primary key really is 2 — and
+    // auto-increment only gives it that key if /login-as/1 happens to run
+    // first. Whichever test logs in as 2 first otherwise gets id 1.
     $user = User::firstOrCreate(
-        ['email' => "user{$id}@rig.test"],
-        ['name' => "User {$id}", 'password' => bcrypt('secret')],
+        ['id' => $id],
+        ['name' => "User {$id}", 'email' => "user{$id}@rig.test", 'password' => bcrypt('secret')],
     );
 
     Auth::login($user);
