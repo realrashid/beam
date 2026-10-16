@@ -26,8 +26,12 @@ test('shareScreen swaps the outgoing video and stopSharing restores the camera',
     expect(await b.evaluate(() => (document.querySelector('#them') as HTMLVideoElement).videoWidth)).toBeGreaterThan(0);
 
     await a.click('#stop-share');
+    // isSharing flips to false as stopSharing()'s first statement, before it awaits
+    // replaceTrack() back onto the sender — proving one proves nothing about the
+    // other, so the sender's track id needs its own poll rather than one read right
+    // after the first promise settles.
     await expect.poll(() => a.evaluate(() => (window as any).__call.isSharing)).toBe(false);
-    expect(await a.evaluate(() => (window as any).__call.peer.connection.getSenders().find((s: RTCRtpSender) => s.track?.kind === 'video')?.track?.id)).toBe(cameraId);
+    await expect.poll(() => a.evaluate(() => (window as any).__call.peer.connection.getSenders().find((s: RTCRtpSender) => s.track?.kind === 'video')?.track?.id)).toBe(cameraId);
     expect(await b.evaluate(() => ((document.querySelector('#them') as HTMLVideoElement).srcObject as MediaStream).getVideoTracks()[0].id)).toBe(remoteBefore);
 });
 
