@@ -73,7 +73,7 @@
     "rig:sync": "cp -R tests/Browser/rig/. ${BEAM_RIG_DIR:-../beam-rig}/"
     },
     "devDependencies": {
-        "@playwright/test": "^1.63.0",
+        "@playwright/test": "^1.64.0",
         "@types/jquery": "^3.5",
         "@types/node": "^22.20.4",
         "@types/react": "^19",
