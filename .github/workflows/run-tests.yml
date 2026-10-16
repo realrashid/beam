@@ -1,0 +1,112 @@
+name: Run Tests
+
+on: ['push', 'pull_request']
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest]
+        php: [8.2, 8.3, 8.4]
+        laravel: [12, 13]
+        stability: [prefer-lowest, prefer-stable]
+        include:
+          # The constraint carries the lowest advisory-free release of each
+          # line. A bare "12.*" would let prefer-lowest pick a version that
+          # Composer's advisory policy refuses to install.
+          - laravel: 12
+            constraint: "^12.61.1"
+            testbench: "^10.0"
+          - laravel: 13
+            constraint: "^13.12.0"
+            testbench: "^11.0"
+        exclude:
+          # Laravel 13 requires PHP 8.3 or higher.
+          - php: 8.2
+            laravel: 13
+
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, intl, gd, fileinfo, gmp
+          coverage: none
+
+      - name: Setup problem matchers
+        run: |
+          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - name: Install dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.constraint }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+
+      - name: Execute tests
+        run: vendor/bin/pest
+
+  # Separate from the matrix on purpose: prefer-lowest resolves Pint to a
+  # release whose output differs enough to fail for reasons unrelated to the
+  # code. Quality runs once, on a stable install.
+  quality:
+    runs-on: ubuntu-latest
+    name: Pint + PHPStan
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          extensions: dom, curl, libxml, mbstring, zip, pdo, sqlite, pdo_sqlite, gmp
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --prefer-stable --prefer-dist --no-interaction
+
+      - name: Pint
+        run: vendor/bin/pint --test
+
+      - name: PHPStan
+        run: composer analyse -- --no-progress
+
+  node:
+    runs-on: ubuntu-latest
+    name: TypeScript + Vitest + build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      # The committed IIFE is the product a Composer-only install receives.
+      # A build that changes it means the commit is stale.
+      - name: Committed client is current
+        run: git diff --exit-code -- resources/dist/beam.js

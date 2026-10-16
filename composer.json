@@ -1,0 +1,99 @@
+{
+    "name": "realrashid/beam",
+    "description": "Real-time calls, screen sharing and peer-to-peer file transfer for Laravel. PHP authorises, rings and mints TURN credentials; the browser joins with one signed token.",
+    "keywords": [
+        "realrashid",
+        "laravel",
+        "beam",
+        "webrtc",
+        "video-call",
+        "audio-call",
+        "screen-share",
+        "file-transfer",
+        "reverb",
+        "turn"
+    ],
+    "homepage": "https://github.com/realrashid/beam",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rashid Ali",
+            "email": "realrashid05@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "realrashid05@gmail.com",
+        "issues": "https://github.com/realrashid/beam/issues",
+        "source": "https://github.com/realrashid/beam",
+        "docs": "https://realrashid.github.io/beam/"
+    },
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^12.61.1|^13.12.0"
+    },
+    "require-dev": {
+        "guzzlehttp/promises": "^2.0.3",
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "minishlink/web-push": "^11.0",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.5.0",
+        "orchestra/testbench": "^10.0||^11.0",
+        "pestphp/pest": "^3.0|^4.0",
+        "pestphp/pest-plugin-arch": "^3.0|^4.0",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0"
+    },
+    "suggest": {
+        "laravel/reverb": "Self-hosted WebSocket server for signaling and incoming-call broadcasts.",
+        "minishlink/web-push": "Required only to ring a closed tab through Web Push (beam:install's VAPID keys and the webpush channel)."
+    },
+    "autoload": {
+        "psr-4": {
+            "RealRashid\\Beam\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RealRashid\\Beam\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@composer run prepare",
+        "post-update-cmd": [
+            "[ -f artisan ] && php artisan boost:update || true"
+        ],
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint",
+        "analyse": "vendor/bin/phpstan analyse --memory-limit=1G",
+        "clear": "@php vendor/bin/testbench package:purge-beam --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RealRashid\\Beam\\BeamServiceProvider"
+            ],
+            "aliases": {
+                "Beam": "RealRashid\\Beam\\Facades\\Beam"
+            }
+        }
+    },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/realrashid"
+        }
+    ]
+}

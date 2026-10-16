@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" width="640" height="200">
+  <rect width="640" height="200" rx="28" fill="#0b141a"/>
+  <circle cx="92" cy="100" r="20" fill="#25d366"/>
+  <path d="M124 66a48 48 0 0 1 0 68" fill="none" stroke="#25d366" stroke-width="14" stroke-linecap="round"/>
+  <path d="M148 42a82 82 0 0 1 0 116" fill="none" stroke="#25d366" stroke-width="14" stroke-linecap="round" opacity="0.55"/>
+  <text x="240" y="118" font-family="Inter, system-ui, -apple-system, Segoe UI, sans-serif" font-size="88" font-weight="700" fill="#ffffff" letter-spacing="-2">Beam</text>
+  <text x="244" y="160" font-family="Inter, system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" fill="#25d366">Real-time calls for Laravel</text>
+</svg>

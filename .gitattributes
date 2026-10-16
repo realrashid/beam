@@ -1,0 +1,26 @@
+# Path-based git attributes
+# https://www.kernel.org/pub/software/scm/git/docs/gitattributes.html
+
+# What is NOT here ships in the Composer dist: resources/dist (the compiled
+# client), resources/boost, stubs/ and database/ are the product.
+# tests/ExportTest.php asserts exactly that.
+/.github            export-ignore
+/.gitattributes     export-ignore
+/.gitignore         export-ignore
+/.editorconfig      export-ignore
+/docs               export-ignore
+/plan               export-ignore
+/tests              export-ignore
+/phpunit.xml.dist   export-ignore
+/phpstan.neon.dist  export-ignore
+/pint.json          export-ignore
+/playwright.config.ts   export-ignore
+/vitest.config.ts   export-ignore
+/vite.config.ts     export-ignore
+/tsconfig.json      export-ignore
+/tsconfig.sw.json   export-ignore
+/tsconfig.browser.json  export-ignore
+
+# PLAN.md, ROADMAP.md, SCOPE.md, STRUCTURE.md, API-SKETCH.md and plan/ are not
+# listed here: .gitignore keeps them out of the repository entirely, so there
+# is nothing for export-ignore to additionally exclude from the Composer dist.

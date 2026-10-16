@@ -1,0 +1,115 @@
+name: Browser Tests
+
+on:
+  push:
+  pull_request:
+  # Firefox and WebKit are several times slower than Chromium at the same
+  # specs, and real WebRTC on a shared runner is where flakes come from. Every
+  # commit gets Chromium; the other two run overnight and on demand.
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+# The two-browser rig: two contexts, fake cameras, a real Reverb server, and
+# real coturn in a container for the relay-only specs.
+jobs:
+  chromium:
+    runs-on: ubuntu-latest
+    name: Playwright rig (Chromium)
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          extensions: dom, curl, mbstring, pdo, sqlite, pdo_sqlite, pcntl, gmp
+          coverage: none
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: |
+          composer update --prefer-stable --prefer-dist --no-interaction
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Build the client
+        run: npm run build
+
+      - name: Build the rig app (a fresh Laravel app outside the package, plus tests/Browser/rig)
+        run: npm run rig:setup
+
+      # The relay-only specs start real coturn themselves (tests/Browser/relay.ts) through Docker.
+      # Playwright's webServer starts Reverb and the app from tests/Browser/server.php.
+      - name: Run the rig
+        run: npm run test:browser -- --project=chromium
+        env:
+          CI: true
+
+      - name: Upload traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces-chromium
+          path: test-results/
+          retention-days: 7
+
+  gecko-webkit:
+    runs-on: ubuntu-latest
+    name: Playwright rig (Firefox, WebKit)
+    # Nightly and on demand, never on a commit: these are the slow ones.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          extensions: dom, curl, mbstring, pdo, sqlite, pdo_sqlite, pcntl, gmp
+          coverage: none
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: |
+          composer update --prefer-stable --prefer-dist --no-interaction
+          npm ci
+          npx playwright install --with-deps firefox webkit
+
+      - name: Build the client
+        run: npm run build
+
+      - name: Build the rig app (a fresh Laravel app outside the package, plus tests/Browser/rig)
+        run: npm run rig:setup
+
+      - name: Run the rig in Firefox
+        run: npm run test:browser -- --project=firefox
+        env:
+          CI: true
+
+      - name: Run the rig in WebKit
+        run: npm run test:browser -- --project=webkit
+        env:
+          CI: true
+
+      - name: Upload traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces-gecko-webkit
+          path: test-results/
+          retention-days: 7

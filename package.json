@@ -1,0 +1,94 @@
+{
+    "name": "@realrashid/beam",
+    "version": "0.0.0",
+    "description": "Real-time calls, screen sharing and peer-to-peer file transfer for Laravel. The browser half: one class, framework-free, with Vue, React and jQuery adapters.",
+    "license": "MIT",
+    "author": "Rashid Ali <realrashid05@gmail.com>",
+    "homepage": "https://realrashid.github.io/beam/",
+    "bugs": "https://github.com/realrashid/beam/issues",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/realrashid/beam.git"
+    },
+    "keywords": [
+        "laravel",
+        "webrtc",
+        "video-call",
+        "screen-share",
+        "file-transfer",
+        "reverb",
+        "echo"
+    ],
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./vue": {
+            "types": "./dist/vue.d.ts",
+            "import": "./dist/vue.js"
+        },
+        "./react": {
+            "types": "./dist/react.d.ts",
+            "import": "./dist/react.js"
+        },
+        "./jquery": {
+            "types": "./dist/jquery.d.ts",
+            "import": "./dist/jquery.js"
+        }
+    },
+    "sideEffects": [
+        "./dist/jquery.js"
+    ],
+    "peerDependencies": {
+        "jquery": "^3.7",
+        "laravel-echo": "^2.0",
+        "react": "^18 || ^19",
+        "vue": "^3.3"
+    },
+    "peerDependenciesMeta": {
+        "vue": {
+            "optional": true
+        },
+        "react": {
+            "optional": true
+        },
+        "jquery": {
+            "optional": true
+        }
+    },
+    "scripts": {
+        "build": "vite build && vite build --mode iife && vite build --mode sw",
+        "test": "vitest run",
+        "test:browser": "playwright test",
+        "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.sw.json && tsc --noEmit -p tsconfig.browser.json",
+        "rig:assets": "node tests/Browser/rig-assets.mjs",
+        "rig:setup": "bash tests/Browser/rig.sh",
+    "rig:sync": "cp -R tests/Browser/rig/. ${BEAM_RIG_DIR:-../beam-rig}/"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.63.0",
+        "@types/jquery": "^3.5",
+        "@types/node": "^22.20.4",
+        "@types/react": "^19",
+        "@types/react-dom": "^19.3.0",
+        "jquery": "^3.7",
+        "jsdom": "^26",
+        "laravel-echo": "^2.0",
+        "node-turn": "^0.0.6",
+        "pusher-js": "^8",
+        "react": "^19",
+        "react-dom": "^19.3.0",
+        "typescript": "^5.6",
+        "vite": "^6",
+        "vite-plugin-dts": "^4",
+        "vitest": "^3",
+        "vue": "^3.5"
+    }
+}

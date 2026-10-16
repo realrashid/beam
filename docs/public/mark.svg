@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+  <style>
+    .dot  { transform-origin: 92px 160px; animation: beat 2.4s ease-in-out infinite; }
+    .arc  { transform-origin: 92px 160px; animation: travel 2.4s ease-out infinite; opacity: 0; }
+    .a1 { animation-delay: 0s; }
+    .a2 { animation-delay: .35s; }
+    .a3 { animation-delay: .7s; }
+    @keyframes beat   { 0%, 100% { transform: scale(1); } 12% { transform: scale(1.12); } }
+    @keyframes travel { 0% { opacity: 0; transform: scale(.85); } 15% { opacity: 1; } 70% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.04); } }
+    @media (prefers-reduced-motion: reduce) { .dot, .arc { animation: none; opacity: 1; } }
+  </style>
+  <circle class="dot" cx="92" cy="160" r="30" fill="#25d366"/>
+  <path class="arc a1" d="M138 108a74 74 0 0 1 0 104" fill="none" stroke="#25d366" stroke-width="20" stroke-linecap="round"/>
+  <path class="arc a2" d="M176 66a132 132 0 0 1 0 188" fill="none" stroke="#128c7e" stroke-width="20" stroke-linecap="round"/>
+  <path class="arc a3" d="M214 24a192 192 0 0 1 0 272" fill="none" stroke="#0f5c50" stroke-width="18" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,35 @@
+/* Beam — WhatsApp green: the colour every user already reads as "a call". */
+:root {
+    --vp-c-brand-1: #128c7e;   /* teal green: links and buttons on white */
+    --vp-c-brand-2: #0e7a6e;
+    --vp-c-brand-3: #25d366;   /* the bright green: hero button, accents */
+    --vp-c-brand-soft: rgba(37, 211, 102, 0.16);
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: linear-gradient(120deg, #25d366 30%, #128c7e);
+    --vp-button-brand-bg: #25d366;
+    --vp-button-brand-hover-bg: #1fb85a;
+    --vp-button-brand-active-bg: #1aa050;
+    --vp-button-brand-text: #063d2b;
+    --vp-button-brand-hover-text: #063d2b;
+    --vp-button-brand-active-text: #063d2b;
+}
+.dark {
+    --vp-c-brand-1: #25d366;
+    --vp-c-brand-2: #34e07a;
+    --vp-c-brand-3: #128c7e;
+    --vp-c-brand-soft: rgba(37, 211, 102, 0.2);
+}
+
+/* Home: the mark glows softly; feature cards lift and turn green at the edge. */
+.VPHero .image-container { filter: drop-shadow(0 0 40px rgba(37, 211, 102, 0.28)); }
+.VPHero .image-bg { background: radial-gradient(closest-side, rgba(37, 211, 102, 0.22), transparent 70%); }
+.VPFeature { transition: transform .2s ease, border-color .2s ease; }
+.VPFeature:hover { transform: translateY(-3px); border-color: var(--vp-c-brand-1); }
+.VPFeature .icon { background: var(--vp-c-brand-soft); width: 52px; height: 52px; }
+.VPFeature .title { color: var(--vp-c-brand-1); }
+.VPFeature .details { line-height: 1.6; }
+.VPFeature .link-text-value { color: var(--vp-c-brand-1); }
+@media (prefers-reduced-motion: reduce) { .VPFeature { transition: none; } .VPFeature:hover { transform: none; } }
+
+/* Page titles carry a line icon from public/icons, drawn in the brand green. */
+.h1-icon { display: inline-block; width: 30px; height: 30px; vertical-align: -4px; margin-right: 8px; padding: 4px; border-radius: 8px; background: var(--vp-c-brand-soft); }

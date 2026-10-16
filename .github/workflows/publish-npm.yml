@@ -1,0 +1,45 @@
+name: Publish to npm
+
+# One tag ships both halves: Packagist reads the tag itself; this publishes the
+# JavaScript to npm at the same version. It refuses to publish if the committed
+# IIFE in resources/dist does not match a fresh build — that is how the two
+# stay honest.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install
+        run: npm ci
+
+      - name: Version from the tag
+        run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version
+
+      - name: Build
+        run: npm run build
+
+      - name: Committed client matches the build
+        run: git diff --exit-code -- resources/dist/beam.js
+
+      - name: Publish
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

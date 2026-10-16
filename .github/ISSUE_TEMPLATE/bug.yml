@@ -1,0 +1,64 @@
+name: Bug report
+description: A call, a transfer or a ring that does not behave as documented.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Most connection problems are a missing TURN relay or a Broadcasting driver that is not running. Please paste `php artisan beam:doctor` first — it answers most of the questions below.
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `php artisan beam:doctor`
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Package, PHP and Laravel versions
+      placeholder: realrashid/beam 1.0.0 · PHP 8.4 · Laravel 13
+    validations:
+      required: true
+  - type: dropdown
+    id: broadcasting
+    attributes:
+      label: Broadcasting driver
+      options: [reverb, pusher, ably, other]
+    validations:
+      required: true
+  - type: dropdown
+    id: transport
+    attributes:
+      label: Signaling transport (config beam.signaling.transport)
+      options: [controller, whisper]
+  - type: dropdown
+    id: turn
+    attributes:
+      label: TURN driver (config beam.ice.turn.driver)
+      options: [none, coturn, cloudflare, twilio, metered]
+    validations:
+      required: true
+  - type: input
+    id: browsers
+    attributes:
+      label: Browsers and OS on both ends
+      placeholder: Chrome 130 / Windows 11 ↔ Safari 18 / iPhone 15
+    validations:
+      required: true
+  - type: dropdown
+    id: frontend
+    attributes:
+      label: Frontend
+      options: [Blade with @beamAssets, Blade with npm, jQuery, Livewire, Inertia + Vue, Inertia + React]
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser console output from both ends
+      render: shell
