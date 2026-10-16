@@ -31,8 +31,13 @@ php artisan install:broadcasting --reverb --without-node --no-interaction --quie
 
 echo "→ applying the overlay"
 cp -R "$OVERLAY"/. "$RIG"/
-[ -f .env ] || cp .env.rig .env
-grep -q '^APP_KEY=.\+' .env || php artisan key:generate --force --quiet
+
+# Always wins over whatever install:broadcasting left in .env: under --no-interaction
+# it sets BROADCAST_CONNECTION=reverb but no key/secret/app id, and Reverb's Pusher-
+# protocol client rejects a null auth key outright. .env.rig is a complete fixture —
+# APP_KEY aside, nothing from create-project's own .env is needed.
+cp .env.rig .env
+php artisan key:generate --force --quiet
 touch database/database.sqlite
 php artisan beam:install --no-interaction --quiet
 php artisan migrate --force --quiet
