@@ -86,7 +86,7 @@
         "react": "^19",
         "react-dom": "^19.3.0",
         "typescript": "^5.6",
-        "vite": "^6",
+        "vite": "^8",
         "vite-plugin-dts": "^4",
         "vitest": "^3",
         "vue": "^3.5"
