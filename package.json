@@ -47,7 +47,7 @@
         "./dist/jquery.js"
     ],
     "peerDependencies": {
-        "jquery": "^3.7",
+        "jquery": "^4.0",
         "laravel-echo": "^2.0",
         "react": "^18 || ^19",
         "vue": "^3.3"
@@ -74,11 +74,11 @@
     },
     "devDependencies": {
         "@playwright/test": "^1.63.0",
-        "@types/jquery": "^3.5",
+        "@types/jquery": "^4.0",
         "@types/node": "^22.20.4",
         "@types/react": "^19",
         "@types/react-dom": "^19.3.0",
-        "jquery": "^3.7",
+        "jquery": "^4.0",
         "jsdom": "^26",
         "laravel-echo": "^2.0",
         "node-turn": "^0.0.6",
